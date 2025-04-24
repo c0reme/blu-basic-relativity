@@ -1,0 +1,25 @@
+---
+import SEO from "@/components/layout/SEO.astro";
+import Wrapper from "@/components/Wrapper";
+import "@/styles/global.css";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <SEO />
+  </head>
+</html>
+<body class="select-none bg-neutral-50">
+  <div class="grid justify-center h-screen">
+    <div class="flex flex-col my-auto md:m-auto p-4">
+      <div class="mb-6 md:invisible justify-center text-center text-red-500">
+        Please use a larger screen for the best experience.
+      </div>
+      <div class="mx-auto">
+        <Wrapper client:only="solid" />
+      </div>
+    </div>
+  </div>
+</body>

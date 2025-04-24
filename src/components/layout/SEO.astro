@@ -1,0 +1,65 @@
+---
+// https://github.com/withastro/storefront/
+export type Image = {
+  src: string;
+  alt: string;
+};
+export type SEOMetaData = {
+  name: string;
+  title: string;
+  description: string;
+  image: Image;
+  canonicalURL?: string | URL;
+  locale?: string;
+};
+export type OpenGraph = Partial<SEOMetaData> & { type?: string };
+export type Twitter = Partial<SEOMetaData> & {
+  handle?: string;
+  card?: "summary" | "summary_large_image";
+};
+
+const {
+  name,
+  title,
+  description,
+  image,
+  locale = "en",
+  canonicalURL = new URL(Astro.url.pathname, Astro.site),
+  og: _og = {},
+} = Astro.props;
+
+const og: OpenGraph = {
+  name,
+  title,
+  description,
+  canonicalURL,
+  image,
+  locale,
+  type: "website",
+  ..._og,
+};
+
+const ensureTrailingSlash = (url: string | URL) => url.toString().replace(/\/$/, "") + "/";
+---
+
+<meta name="generator" content={Astro.generator} />
+<link rel="canonical" href={ensureTrailingSlash(Astro.url)} />
+<meta
+  name="keywords"
+  content="Final Fantasy 14, FFXIV, Blue Mage, Basic Relativity, Eden's Promise Savage, E12S, Phase 2"
+/>
+<title>BLU Basic Relativity</title>
+<meta
+  name="description"
+  content="Test your knowledge of Basic Relativity from Eden's Promise (Savage) Phase 2 in FFXIV. This interactive quiz helps Blue Mages (and anyone else) practice debuff resolution and positioning to avoid AoEs and raid wipes. Perfect for pre-prog or a quick refresher!"
+/>
+<meta property="og:title" content="BLU Basic Relativity" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={ensureTrailingSlash(Astro.url)} />
+<meta property="og:locale" content={Astro.currentLocale} />
+<meta
+  property="og:description"
+  content="Avoid AoEs and practice debuff mechanics from Eden's Promise (Savage) Phase 2 with this Blue Mage-friendly training quiz."
+/>
+<meta property="og:site_name" content={Astro.site?.hostname} />
+<meta property="og:image" content={new URL("imgs/Player.png", Astro.url)} />
