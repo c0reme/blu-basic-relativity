@@ -89,8 +89,8 @@ export const Debuffs: {
     timer: 22,
     coords: [
       [
-        { x: 230, y: 100 },
-        { x: 270, y: 100 },
+        { x: 220, y: 100 },
+        { x: 280, y: 100 },
       ],
       [
         { x: 70, y: 150 },
@@ -120,7 +120,6 @@ interface QuizContextType {
   setStarted: Setter<boolean>;
   isPracticeMode: Accessor<boolean>;
   setPracticeMode: Setter<boolean>;
-
   baits: Accessor<(boolean | null)[]>;
   setBaits: Setter<(boolean | null)[]>;
   buttonText: Accessor<ButtonText>;

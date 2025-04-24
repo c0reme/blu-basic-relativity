@@ -7,7 +7,7 @@ import {
   Polyline,
 } from "fabric";
 import { useQuizContext } from "../context/Quiz";
-import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import { createSignal, onCleanup, onMount } from "solid-js";
 import { render } from "solid-js/web";
 import { FaBrandsGithub } from "solid-icons/fa";
 import { FiInfo } from "solid-icons/fi";
@@ -295,6 +295,9 @@ const Quiz = () => {
     setButtonText("Next");
     updateClass("status", "font-mono font-bold text-red-600");
     setStreak(0);
+
+    updateClass("streak", "font-semibold text-red-600");
+    document.getElementById("highscore")!.textContent = bestScore.toString();
   };
 
   const handleButtonClick = () => {
@@ -311,11 +314,14 @@ const Quiz = () => {
     const { coords } = debuffs().at(0)!;
 
     const correctPositions = coords.reduce((acc, coords) => {
-      const isCorrect = clicks().some(
-        (click) =>
-          Math.abs(click.x - coords[0].x) < 25 &&
-          Math.abs(click.y - coords[0].y) < 25,
-      );
+      const isCorrect = clicks().some((click) => {
+        return coords.some(
+          (coord) =>
+            Math.abs(click.x - coord.x) < 25 &&
+            Math.abs(click.y - coord.y) < 25,
+        );
+      });
+
       return acc + (isCorrect ? 1 : 0);
     }, 0);
 
@@ -382,8 +388,6 @@ const Quiz = () => {
 
         const { x, y } = clicks().at(-1)!;
 
-        console.log(type, timer);
-
         if (type === "Dark_Fire_III") drawCircleOnPoint([x, y], 60);
         else if (type === "Dark_Blizzard_III") drawDonutOnPoint([x, y], 100);
         else if (type === "Shadoweye") drawCircleOnPoint([x, y], 20);
@@ -416,7 +420,6 @@ const Quiz = () => {
     setStatus("Running");
     setButtonText("Skip");
     updateClass("status", "font-semibold");
-    updateClass("streak", "font-semibold text-red-600");
 
     canvas.getObjects().forEach((obj) => {
       if (obj.name?.includes("player") || obj.name?.includes("aoes"))
@@ -540,7 +543,7 @@ const Quiz = () => {
             </div>
             <div class="flex space-x-1">
               <h3 class="font-sans">Best Streak:</h3>
-              <h2 id="streak" class="font-mono font-semibold">
+              <h2 id="highscore" class="font-mono font-semibold">
                 {bestScore}
               </h2>
             </div>
