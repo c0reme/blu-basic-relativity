@@ -578,10 +578,16 @@ const Quiz = () => {
             </ul>
           </div>
           <div class="mx-auto mt-2 flex flex-row gap-2 text-neutral-800 transition-colors">
-            <a href="#" class="hover:text-blue-800">
+            <a
+              href="https://github.com/c0reme/blu-basic-relativity"
+              class="hover:text-blue-800"
+            >
               <FaBrandsGithub size={24} />
             </a>
-            <a href="#" class="hover:text-blue-800">
+            <a
+              href="https://github.com/c0reme/blu-basic-relativity?tab=readme-ov-file#how-to-use"
+              class="hover:text-blue-800"
+            >
               <FiInfo size={24} />
             </a>
           </div>
