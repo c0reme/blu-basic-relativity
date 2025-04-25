@@ -15,9 +15,10 @@ Though tailored for **Blue Mages**, this tool is helpful for **any player** look
 ## How to Use
 
 1. Open the quiz: [https://c0reme.github.io/blu-basic-relativity](https://c0reme.github.io/blu-basic-relativity)
-2. Check your assigned **debuff** and the mechanic scenario.
-3. Click where you'd move during the mechanic.
-4. Get instant feedback and see your score.
+2. Review your assigned **debuffs** and check for **blue-coloured lights**, which indicate where to bait the light mechanic.
+3. Click on the arena where you would position yourself during the mechanic.
+4. If your answer is correct, you’ll receive confirmation. If incorrect, the correct position will be highlighted so you can learn from the mistake.
+5. Repeat and improve your awareness and timing!
 
 ## Contributions
 
