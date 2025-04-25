@@ -93,8 +93,8 @@ export const Debuffs: {
         { x: 280, y: 100 },
       ],
       [
-        { x: 70, y: 150 },
-        { x: 430, y: 150 },
+        { x: 50, y: 125 },
+        { x: 450, y: 125 },
       ],
     ],
   },
@@ -106,8 +106,8 @@ export const Debuffs: {
         { x: 270, y: 100 },
       ],
       [
-        { x: 70, y: 350 },
-        { x: 430, y: 350 },
+        { x: 50, y: 385 },
+        { x: 450, y: 385 },
       ],
     ],
   },
@@ -143,7 +143,6 @@ export const QuizProvider: ParentComponent = (props) => {
   const [canvasJSON, setCanvasJSON] = createSignal<any>();
   const [hasStarted, setStarted] = createSignal<boolean>(false);
   const [isPracticeMode, setPracticeMode] = createSignal<boolean>(true);
-
   const [baits, setBaits] = createSignal<(boolean | null)[]>([]);
   const [clicks, setClicks] = createSignal<Coords[]>([]);
   const [coords, setCoords] = createSignal<Coords>({ x: 0, y: 0 });
@@ -171,12 +170,12 @@ export const QuizProvider: ParentComponent = (props) => {
     const isNear = baitsArray[1] === true && baitsArray[7] === true;
 
     const chosen = Object.entries(Debuffs)
-      .filter(([key]) => !(isNear && key.includes("Near")))
+      .filter(([key]) =>
+        isNear ? !key.includes("Far") : !key.includes("Near"),
+      )
       .map((data) => ({ data, sort: Math.random() }))
       .sort((a, b) => a.sort - b.sort)
-      .map(({ data }) => {
-        return { key: data[0], ...data[1] };
-      })[0];
+      .map(({ data }) => ({ key: data[0], ...data[1] }))[0];
 
     const object = {
       key: chosen.key,

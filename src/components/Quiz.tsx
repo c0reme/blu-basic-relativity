@@ -175,6 +175,7 @@ const Quiz = () => {
         top: canvas.height / 2 + 240 * Math.sin(angle),
         radius: 16 / 1.4,
         fill: idx === 0 ? "yellow" : bait ? "blue" : "red",
+        selectable: false,
       });
 
       canvas.add(circle);
@@ -298,6 +299,24 @@ const Quiz = () => {
 
     updateClass("streak", "font-semibold text-red-600");
     document.getElementById("highscore")!.textContent = bestScore.toString();
+
+    debuffs().forEach(({ coords }) => {
+      coords.forEach((pos) => {
+        pos.forEach((v) => {
+          canvas.add(
+            new Circle({
+              name: "positions",
+              fill: "green",
+              opacity: 0.5,
+              radius: 25,
+              left: v.x,
+              top: v.y,
+              selectable: false,
+            }),
+          );
+        });
+      });
+    });
   };
 
   const handleButtonClick = () => {
@@ -313,13 +332,15 @@ const Quiz = () => {
 
     const { coords } = debuffs().at(0)!;
 
-    const correctPositions = coords.reduce((acc, coords) => {
-      const isCorrect = clicks().some((click) => {
-        return coords.some(
-          (coord) =>
-            Math.abs(click.x - coord.x) < 25 &&
-            Math.abs(click.y - coord.y) < 25,
-        );
+    const correctPositions = coords.reduce((acc, coords, a) => {
+      const isCorrect = clicks().some((click, b) => {
+        return a === b
+          ? coords.some(
+              (coord) =>
+                Math.abs(click.x - coord.x) < 25 &&
+                Math.abs(click.y - coord.y) < 25,
+            )
+          : false;
       });
 
       return acc + (isCorrect ? 1 : 0);
@@ -342,8 +363,12 @@ const Quiz = () => {
       { timer: 16, type: "line", targets: "Dark_Blizzard_III", ids: [2, 6] },
       { timer: 22, type: "line", targets: "Dark_Water_III", ids: [1, 7] },
       { timer: 29, type: "line", targets: "Shadoweye", ids: [3, 5, 1, 7] },
-      { timer: 29, type: "circle", coords: [250, 10] },
+      { timer: 29, type: "circle", coords: [250, 30] },
     ];
+
+    document.addEventListener("keydown", (event) => {
+      if (event.code === "Space") setPaused((prev) => !prev);
+    });
 
     interval = setInterval(() => {
       if (isPaused()) return;
@@ -351,8 +376,10 @@ const Quiz = () => {
       renderDebuffs();
 
       if (
-        Math.max(...AoEs.map((v) => v.timer)) <= 0 &&
-        Math.max(...debuffs().map((v) => v.timer)) < 0
+        Math.max(
+          ...AoEs.map((v) => v.timer),
+          ...debuffs().map((v) => v.timer),
+        ) < 0
       ) {
         return checkPlayerAccuracy();
       }
@@ -379,7 +406,10 @@ const Quiz = () => {
           }
         }
 
-        if (aoe.type === "circle") return drawCircleOnPoint(aoe.coords!, 245);
+        if (aoe.type === "circle") {
+          console.log(aoe);
+          return drawCircleOnPoint(aoe.coords!, 210);
+        }
       });
 
       debuffs().forEach(({ type, timer }) => {
@@ -419,10 +449,14 @@ const Quiz = () => {
     setClicks([]);
     setStatus("Running");
     setButtonText("Skip");
-    updateClass("status", "font-semibold");
+    updateClass("status", "font-semibold font-mono");
 
     canvas.getObjects().forEach((obj) => {
-      if (obj.name?.includes("player") || obj.name?.includes("aoes"))
+      if (
+        obj.name?.includes("player") ||
+        obj.name?.includes("aoes") ||
+        obj.name?.includes("positions")
+      )
         canvas.remove(obj);
     });
 
@@ -437,10 +471,6 @@ const Quiz = () => {
     });
 
     drawBackground();
-
-    document.addEventListener("keydown", (event) => {
-      if (event.code === "Space") setPaused((prev) => !prev);
-    });
 
     canvas.on("mouse:move", ({ e }) => {
       const point = canvas.getViewportPoint(e);
@@ -507,7 +537,7 @@ const Quiz = () => {
     });
   });
 
-  onCleanup(() => resetQuiz);
+  onCleanup(() => resetQuiz());
 
   return (
     <>
