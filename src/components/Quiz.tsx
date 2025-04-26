@@ -387,16 +387,19 @@ const Quiz = () => {
 
       const available = canvas
         ?.getObjects()
-        .filter((obj) => obj.name === "lights" && obj.fill === "blue")!;
+        .filter((obj) => obj.name === "lights")!;
 
       AoEs.forEach((aoe) => {
         if (aoe.timer !== 0) return;
 
         if (debuffs()[0].type === aoe.targets) {
           if (aoe.ids && aoe.ids.length > 0) {
-            const [a, b] = available.filter((obj) =>
-              aoe.ids?.includes(Number(obj.id)),
-            )!;
+            const [a, b] = available.filter((obj) => {
+              if (aoe.targets === "Shadoweye") {
+                return aoe.ids?.includes(Number(obj.id)) && obj.fill === "red";
+              }
+              return aoe.ids?.includes(Number(obj.id)) && obj.fill === "blue";
+            })!;
 
             if (aoe.type === "line") {
               return drawLineToPoint([
