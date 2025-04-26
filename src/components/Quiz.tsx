@@ -364,6 +364,7 @@ const Quiz = () => {
       { timer: 22, type: "line", targets: "Dark_Water_III", ids: [1, 7] },
       { timer: 29, type: "line", targets: "Shadoweye", ids: [3, 5, 1, 7] },
       { timer: 29, type: "circle", coords: [250, 30] },
+      { timer: 36, type: "circle", targets: "Dark_Water_III" }, // will be used properly
     ];
 
     document.addEventListener("keydown", (event) => {
@@ -386,16 +387,19 @@ const Quiz = () => {
 
       const available = canvas
         ?.getObjects()
-        .filter((obj) => obj.name === "lights" && obj.fill === "blue")!;
+        .filter((obj) => obj.name === "lights")!;
 
       AoEs.forEach((aoe) => {
         if (aoe.timer !== 0) return;
 
         if (debuffs()[0].type === aoe.targets) {
           if (aoe.ids && aoe.ids.length > 0) {
-            const [a, b] = available.filter((obj) =>
-              aoe.ids?.includes(Number(obj.id)),
-            )!;
+            const [a, b] = available.filter((obj) => {
+              if (aoe.targets === "Shadoweye") {
+                return obj.fill === "blue" && aoe.ids?.includes(Number(obj.id));
+              }
+              return aoe.ids?.includes(Number(obj.id));
+            })!;
 
             if (aoe.type === "line") {
               return drawLineToPoint([
@@ -404,12 +408,14 @@ const Quiz = () => {
               ]);
             }
           }
+
+          if (aoe.type === "circle") {
+            const { x, y } = clicks().at(-1)!;
+            return drawCircleOnPoint([x, y]);
+          }
         }
 
-        if (aoe.type === "circle") {
-          console.log(aoe);
-          return drawCircleOnPoint(aoe.coords!, 210);
-        }
+        if (aoe.type === "circle") return drawCircleOnPoint(aoe.coords!, 210);
       });
 
       debuffs().forEach(({ type, timer }) => {
