@@ -395,7 +395,7 @@ const Quiz = () => {
         if (debuffs()[0].type === aoe.targets) {
           if (aoe.ids && aoe.ids.length > 0) {
             const [a, b] = available.filter((obj) => {
-              if (aoe.targets === "Shadoweye") {
+              if (aoe.targets === "Dark_Water_III") {
                 return aoe.ids?.includes(Number(obj.id)) && obj.fill === "red";
               }
               return aoe.ids?.includes(Number(obj.id)) && obj.fill === "blue";
